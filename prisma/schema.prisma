@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -10,24 +11,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Dish {
-  id          Int          @id @default(autoincrement())
-  ingredients String
-  ingredient  ingredient[]
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  password  String
+  create_at DateTime @default(now())
+
+  Ingredient Ingredient[]
 }
 
-model ingredient {
-  id       Int @id @default(autoincrement())
-  dish_id  Int
-  group_id Int
+model Dish {
+  id                Int                 @id @default(autoincrement())
+  name              String
+  description       String
+  time_to_prepare   String
+  preparation       String
+  ingredient_dosage Ingredient_dosage[]
+}
 
-  group Food_group @relation(fields: [group_id], references: [id])
-  dish  Dish       @relation(fields: [dish_id], references: [id])
+model Ingredient_dosage {
+  id            Int        @id @default(autoincrement())
+  quantity      String
+  description   String
+  ingredient_id Int
+  dish_id       Int
+  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
+  dish          Dish       @relation(fields: [dish_id], references: [id])
+}
+
+model Ingredient {
+  id             Int    @id @default(autoincrement())
+  group_id       Int
+  carbohydrates  Float
+  proteins       Float
+  total_fat      Float
+  calories       String
+  description    String
+  info_author_id Int
+
+  author            User                @relation(fields: [info_author_id], references: [id])
+  group             Food_group          @relation(fields: [group_id], references: [id])
+  ingredient_dosage Ingredient_dosage[]
 }
 
 model Food_group {
   id          Int          @id @default(autoincrement())
   group       String
   description String
-  ingredient  ingredient[]
+  ingredient  Ingredient[]
 }
