@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
+import { IngredientRepository } from './ingredient.repository';
 
 @Injectable()
 export class IngredientService {
+  constructor(private readonly IngredientRepository: IngredientRepository) {}
   create(createIngredientDto: CreateIngredientDto) {
     return 'This action adds a new ingredient';
   }

@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { DishRepository } from './dish.repository';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Injectable()
 export class DishService {
+  constructor(private readonly DishRepository: DishRepository) {}
   create(createDishDto: CreateDishDto) {
-    return 'This action adds a new dish';
+    return this.DishRepository.create(createDishDto);
   }
 
   findAll() {

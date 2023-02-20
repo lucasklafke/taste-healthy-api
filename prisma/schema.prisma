@@ -42,6 +42,7 @@ model Ingredient_dosage {
 
 model Ingredient {
   id             Int    @id @default(autoincrement())
+  name           String
   group_id       Int
   carbohydrates  Float
   proteins       Float
