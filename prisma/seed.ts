@@ -1,21 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 async function main() {
-  const mainUser = await prisma.user.create({
-    data: {
-      username: 'lucas',
-      email: 'lucas@example.com',
-      password: 'password',
-    },
-  });
-
-  const group_id = [
+  const groupId = [
     {
       group: 'spice',
       description:
         'it is a general group of ingredients that complements other foods',
     },
   ];
+
   const ingredients = [
     {
       name: 'pepper',
@@ -38,6 +31,18 @@ async function main() {
       info_author_id: 1,
     },
   ];
+
+  const mainUser = await prisma.user.create({
+    data: {
+      username: 'lucas',
+      email: 'lucas@example.com',
+      password: 'password',
+    },
+  });
+
+  const persistedGroupId = await prisma.food_group.createMany({
+    data: groupId,
+  });
   const persistedIngredients = await prisma.ingredient.createMany({
     data: ingredients,
   });
