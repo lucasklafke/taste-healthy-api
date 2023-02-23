@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateIngredientDosageDto } from '../ingredient-dosage/dto/create-ingredient-dosage.dto';
 import { Ingredient_dosage } from '../ingredient-dosage/entities/ingredient-dosage.entity';
@@ -22,7 +22,7 @@ export class DishRepository {
           time_to_prepare: data.time_to_prepare,
         },
       });
-
+      Logger.log(dish);
       const ingredientDosage = await this.IngredientDosageService.create(
         data.ingredients,
         dish.id,

@@ -1,4 +1,5 @@
 export class CreateIngredientDto {
+  name: string;
   group_id: number;
   carbohydrates: number;
   proteins: number;
