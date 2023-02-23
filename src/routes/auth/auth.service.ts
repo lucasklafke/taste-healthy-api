@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { BcryptUtil } from '../../utils/bcrypt.util';
 import { JwtService } from '@nestjs/jwt';
@@ -15,13 +15,13 @@ export class AuthService {
     let user: User;
     try {
       user = await this.UsersService.findOneByUsername(username);
-      if (!user) return null;
+      if (!user) throw new UnauthorizedException(`user ${user} not found`);
     } catch (error) {
-      return null;
+      throw new UnauthorizedException(`user ${user} not found`);
     }
     const isPasswordValid = this.bcryptUtil.decrypt(password, user.password);
 
-    if (!isPasswordValid) return null;
+    if (!isPasswordValid) throw new UnauthorizedException(`password not valid`);
     return user;
   }
 

@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { DishService } from './dish.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
@@ -16,16 +18,19 @@ export class DishController {
   constructor(private readonly dishService: DishService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   create(@Body() createDishDto: CreateDishDto) {
     return this.dishService.create(createDishDto);
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.dishService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string) {
     return this.dishService.findOne(+id);
   }

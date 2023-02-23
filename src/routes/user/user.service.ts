@@ -7,7 +7,7 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(private readonly UserRepository: UserRepository) {}
   create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+    return this.UserRepository.create(createUserDto);
   }
 
   findAll() {
