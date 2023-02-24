@@ -15,7 +15,7 @@ export class DishService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} dish`;
+    return this.DishRepository.findOne(id);
   }
 
   update(id: number, updateDishDto: UpdateDishDto) {

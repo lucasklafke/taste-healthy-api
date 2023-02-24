@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { BcryptUtil } from '../../utils/bcrypt.util';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,20 +16,22 @@ export class AuthService {
     let user: User;
     try {
       user = await this.UsersService.findOneByUsername(username);
-      if (!user) throw new UnauthorizedException(`user ${user} not found`);
+      if (!user) return null;
     } catch (error) {
-      throw new UnauthorizedException(`user ${user} not found`);
+      return null;
     }
     const isPasswordValid = this.bcryptUtil.decrypt(password, user.password);
 
-    if (!isPasswordValid) throw new UnauthorizedException(`password not valid`);
+    if (!isPasswordValid) return null;
     return user;
   }
 
-  login(user: User) {
-    const payload = { sub: user.id, username: user.username };
+  async login(user: User) {
+    const payload = { username: user.username, sub: user.id };
     return {
-      token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload, {
+        secret: process.env.JWT_SECRET_KEY,
+      }),
     };
   }
 }

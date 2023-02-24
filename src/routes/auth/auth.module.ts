@@ -10,14 +10,13 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { BcryptUtil } from 'src/utils/bcrypt.util';
 import { UserService } from '../user/user.service';
 import { UserRepository } from '../user/user.repository';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
     PassportModule,
     JwtModule.register({
-      privateKey: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '1d' },
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: '120s' },
     }),
   ],
   controllers: [AuthController],

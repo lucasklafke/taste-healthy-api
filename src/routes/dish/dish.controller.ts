@@ -18,19 +18,17 @@ export class DishController {
   constructor(private readonly dishService: DishService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   create(@Body() createDishDto: CreateDishDto) {
     return this.dishService.create(createDishDto);
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.dishService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
   findOne(@Param('id') id: string) {
     return this.dishService.findOne(+id);
   }

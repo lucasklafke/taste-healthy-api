@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateIngredientDosageDto } from '../ingredient-dosage/dto/create-ingredient-dosage.dto';
 import { Ingredient_dosage } from '../ingredient-dosage/entities/ingredient-dosage.entity';
@@ -22,11 +28,30 @@ export class DishRepository {
           time_to_prepare: data.time_to_prepare,
         },
       });
-      Logger.log(dish);
-      const ingredientDosage = await this.IngredientDosageService.create(
-        data.ingredients,
-        dish.id,
-      );
+
+      const ingredientDosage = await prisma.ingredient_dosage
+        .create({
+          data: {
+            description: data.ingredients[0].description,
+            quantity: data.ingredients[0].quantity,
+            dish_id: dish.id,
+            ingredient_id: data.ingredients[0].ingredient_id,
+          },
+        })
+        .catch((error) => {
+          throw new NotFoundException(`${error}`);
+        });
+    });
+  }
+
+  async findOne(id: number) {
+    return await this.PrismaService.dish.findFirst({
+      where: {
+        id,
+      },
+      include: {
+        ingredient_dosage: true,
+      },
     });
   }
 }

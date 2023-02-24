@@ -9,15 +9,15 @@ export class IngredientDosageRepository {
   constructor(private readonly PrismaService: PrismaService) {}
 
   async createMany(data: Ingredient_dosage[]) {
+    Logger.log(data);
     const teste = await this.PrismaService.ingredient_dosage
       .createMany({
         data,
       })
       .catch((error) => {
-        throw new NotFoundException(`${error.message}`);
+        throw new NotFoundException(`${error}`);
       });
 
-    Logger.log('ASDIUPFHasduighasdiughiashdg', teste);
     return teste;
   }
 }
