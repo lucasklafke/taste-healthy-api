@@ -5,5 +5,14 @@ export class CreateDishDto {
   description: string;
   time_to_prepare: string;
   preparation: string;
+  author_id: number;
+  ingredients: Ingredient_dosage[];
+}
+
+export class receivedDishDto {
+  name: string;
+  description: string;
+  time_to_prepare: string;
+  preparation: string;
   ingredients: Ingredient_dosage[];
 }

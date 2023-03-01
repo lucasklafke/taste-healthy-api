@@ -26,17 +26,15 @@ export class DishRepository {
           name: data.name,
           preparation: data.preparation,
           time_to_prepare: data.time_to_prepare,
+          author_id: data.author_id,
         },
       });
-
+      data.ingredients.forEach((ingredient) => {
+        ingredient.dish_id = dish.id;
+      });
       const ingredientDosage = await prisma.ingredient_dosage
-        .create({
-          data: {
-            description: data.ingredients[0].description,
-            quantity: data.ingredients[0].quantity,
-            dish_id: dish.id,
-            ingredient_id: data.ingredients[0].ingredient_id,
-          },
+        .createMany({
+          data: data.ingredients,
         })
         .catch((error) => {
           throw new NotFoundException(`${error}`);
@@ -44,6 +42,38 @@ export class DishRepository {
     });
   }
 
+  async findByName(name: string) {
+    return this.PrismaService.dish.findMany({
+      where: {
+        name: {
+          contains: name,
+        },
+      },
+      select: {
+        name: true,
+        description: true,
+        preparation: true,
+        author_id: true,
+        ingredient_dosage: {
+          select: { quantity: true, ingredient: { select: { name: true } } },
+        },
+      },
+    });
+  }
+
+  async findAll() {
+    return this.PrismaService.dish.findMany({
+      select: {
+        name: true,
+        description: true,
+        preparation: true,
+        author_id: true,
+        ingredient_dosage: {
+          select: { quantity: true, ingredient: { select: { name: true } } },
+        },
+      },
+    });
+  }
   async findOne(id: number) {
     return await this.PrismaService.dish.findFirst({
       where: {

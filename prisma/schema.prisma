@@ -9,11 +9,12 @@ datasource db {
 
 model User {
   id         Int          @id @default(autoincrement())
-  email      String @unique
+  email      String       @unique
   password   String
   create_at  DateTime     @default(now())
   username   String
   Ingredient Ingredient[]
+  Dish       Dish[]
 }
 
 model Dish {
@@ -22,6 +23,8 @@ model Dish {
   name              String
   preparation       String
   time_to_prepare   String
+  author_id         Int
+  Author            User                @relation(fields: [author_id], references: [id])
   ingredient_dosage Ingredient_dosage[]
 }
 

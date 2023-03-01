@@ -7,10 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  Logger,
+  Req,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DishService } from './dish.service';
-import { CreateDishDto } from './dto/create-dish.dto';
+import { CreateDishDto, receivedDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Controller('dish')
@@ -18,14 +21,21 @@ export class DishController {
   constructor(private readonly dishService: DishService) {}
 
   @Post()
-  // @UseGuards(AuthGuard('jwt'))
-  create(@Body() createDishDto: CreateDishDto) {
-    return this.dishService.create(createDishDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(@Body() data: receivedDishDto, @Req() req: any) {
+    const author_id = Number(req.user.userId);
+    const createDishData: CreateDishDto = {
+      ...data,
+      author_id,
+    };
+    return this.dishService.create(createDishData);
   }
 
   @Get()
-  findAll() {
-    return this.dishService.findAll();
+  findAll(@Query('name') name: string) {
+    const filters: { name: string | null } = { name: name };
+    Logger.log('findall', filters);
+    return this.dishService.findAll(filters);
   }
 
   @Get(':id')
@@ -34,11 +44,13 @@ export class DishController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard('jwt'))
   update(@Param('id') id: string, @Body() updateDishDto: UpdateDishDto) {
     return this.dishService.update(+id, updateDishDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
     return this.dishService.remove(+id);
   }
