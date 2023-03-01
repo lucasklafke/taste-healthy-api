@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 async function main() {
   const groupId = [
@@ -36,7 +37,7 @@ async function main() {
     data: {
       username: 'lucas',
       email: 'lucas@example.com',
-      password: 'password',
+      password: bcrypt.hashSync('password', Number(process.env.SALT)),
     },
   });
 

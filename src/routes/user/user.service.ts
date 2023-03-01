@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { BcryptUtil } from 'src/utils/bcrypt.util';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,6 +11,10 @@ export class UserService {
     private readonly bcryptUtil: BcryptUtil,
   ) {}
   create(createUserDto: CreateUserDto) {
+    const userAlreadyExist = this.UserRepository.findOneByEmail(
+      createUserDto.email,
+    );
+    if (userAlreadyExist) throw new ConflictException('email already exist');
     const hashedPassword = this.bcryptUtil.encrypt(createUserDto.password);
     createUserDto.password = hashedPassword;
     return this.UserRepository.create(createUserDto);
@@ -24,8 +28,12 @@ export class UserService {
     return this.UserRepository.findOneByUsername(username);
   }
 
+  findOneByEmail(email: string) {
+    return this.UserRepository.findOneByEmail(email);
+  }
+
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.UserRepository.findOneById(id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

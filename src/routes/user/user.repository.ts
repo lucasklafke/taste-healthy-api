@@ -13,6 +13,21 @@ export class UserRepository {
       },
     });
   }
+  async findOneById(id: number) {
+    return this.PrismaService.user.findFirst({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async findOneByEmail(email: string) {
+    return this.PrismaService.user.findUniqueOrThrow({
+      where: {
+        email,
+      },
+    });
+  }
 
   async create(data: CreateUserDto) {
     return await this.PrismaService.user.create({

@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -11,21 +8,20 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String
-  email     String
-  password  String
-  create_at DateTime @default(now())
-
+  id         Int          @id @default(autoincrement())
+  email      String @unique
+  password   String
+  create_at  DateTime     @default(now())
+  username   String
   Ingredient Ingredient[]
 }
 
 model Dish {
   id                Int                 @id @default(autoincrement())
-  name              String
   description       String
-  time_to_prepare   String
+  name              String
   preparation       String
+  time_to_prepare   String
   ingredient_dosage Ingredient_dosage[]
 }
 
@@ -35,23 +31,22 @@ model Ingredient_dosage {
   description   String
   ingredient_id Int
   dish_id       Int
-  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
   dish          Dish       @relation(fields: [dish_id], references: [id])
+  ingredient    Ingredient @relation(fields: [ingredient_id], references: [id])
 }
 
 model Ingredient {
-  id             Int    @id @default(autoincrement())
-  name           String
-  group_id       Int
-  carbohydrates  Float
-  proteins       Float
-  total_fat      Float
-  calories       String
-  description    String
-  info_author_id Int
-
-  author            User                @relation(fields: [info_author_id], references: [id])
+  id                Int                 @id @default(autoincrement())
+  group_id          Int
+  carbohydrates     Float
+  proteins          Float
+  total_fat         Float
+  calories          String
+  description       String
+  info_author_id    Int
+  name              String
   group             Food_group          @relation(fields: [group_id], references: [id])
+  author            User                @relation(fields: [info_author_id], references: [id])
   ingredient_dosage Ingredient_dosage[]
 }
 

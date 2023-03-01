@@ -3,7 +3,6 @@ import { UserService } from '../user/user.service';
 import { BcryptUtil } from '../../utils/bcrypt.util';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
-import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,21 +11,23 @@ export class AuthService {
     private readonly bcryptUtil: BcryptUtil,
     private readonly jwtService: JwtService,
   ) {}
-  async validateUser(username: string, password: string) {
+  async validateUser(email: string, password: string) {
     let user: User;
     try {
-      user = await this.UsersService.findOneByUsername(username);
+      user = await this.UsersService.findOneByEmail(email);
+      Logger.log(user);
       if (!user) return null;
     } catch (error) {
       return null;
     }
     const isPasswordValid = this.bcryptUtil.decrypt(password, user.password);
-
+    Logger.log(isPasswordValid);
     if (!isPasswordValid) return null;
     return user;
   }
 
   async login(user: User) {
+    Logger.log(user);
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload, {

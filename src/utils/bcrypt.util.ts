@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -6,7 +6,7 @@ export class BcryptUtil {
   private salt: number;
 
   constructor() {
-    this.salt = 10;
+    this.salt = Number(process.env.SALT);
   }
   encrypt(password: string) {
     const hash = bcrypt.hashSync(password, this.salt);
