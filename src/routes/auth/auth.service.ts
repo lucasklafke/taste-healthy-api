@@ -15,19 +15,16 @@ export class AuthService {
     let user: User;
     try {
       user = await this.UsersService.findOneByEmail(email);
-      Logger.log(user);
       if (!user) return null;
     } catch (error) {
       return null;
     }
     const isPasswordValid = this.bcryptUtil.decrypt(password, user.password);
-    Logger.log(isPasswordValid);
     if (!isPasswordValid) return null;
     return user;
   }
 
   async login(user: User) {
-    Logger.log(user);
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload, {

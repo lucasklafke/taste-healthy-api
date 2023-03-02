@@ -10,6 +10,7 @@ import {
   Query,
   Logger,
   Req,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DishService } from './dish.service';
@@ -34,7 +35,6 @@ export class DishController {
   @Get()
   findAll(@Query('name') name: string) {
     const filters: { name: string | null } = { name: name };
-    Logger.log('findall', filters);
     return this.dishService.findAll(filters);
   }
 
@@ -45,13 +45,20 @@ export class DishController {
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
-  update(@Param('id') id: string, @Body() updateDishDto: UpdateDishDto) {
-    return this.dishService.update(+id, updateDishDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateDishDto: UpdateDishDto,
+    @Req() req: any,
+  ) {
+    const { userId } = req.user;
+    return this.dishService.update(+id, updateDishDto, userId);
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @UseGuards(AuthGuard('jwt'))
-  remove(@Param('id') id: string) {
-    return this.dishService.remove(+id);
+  remove(@Param('id') id: string, @Req() req: any) {
+    const userId = req.user.userId;
+    return this.dishService.remove(+id, userId);
   }
 }

@@ -13,7 +13,6 @@ export class IngredientDosageService {
     data.forEach((ingredient_dosage) => {
       ingredient_dosage['dish_id'] = dishId;
     });
-    Logger.log(data);
     return this.IngredientDosageRepository.createMany(data);
   }
 }

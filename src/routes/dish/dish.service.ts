@@ -1,4 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { DishRepository } from './dish.repository';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
@@ -24,11 +29,21 @@ export class DishService {
     return this.DishRepository.findOne(id);
   }
 
-  update(id: number, updateDishDto: UpdateDishDto) {
-    return `This action updates a #${id} dish`;
+  async update(id: number, updateDishDto: UpdateDishDto, userId: number) {
+    const dish = await this.DishRepository.findOne(id);
+    if (!dish) throw new NotFoundException('record not found');
+    if (dish.author_id !== userId) {
+      throw new UnauthorizedException('you are not the author');
+    }
+    return this.DishRepository.update(updateDishDto, dish.id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} dish`;
+  async remove(id: number, userId: number) {
+    const dish = await this.DishRepository.findOne(id);
+    if (!dish) throw new NotFoundException('record not found');
+    if (dish.author_id !== userId) {
+      throw new UnauthorizedException('you are not the author');
+    }
+    return this.DishRepository.remove(id);
   }
 }

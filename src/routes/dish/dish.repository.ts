@@ -1,15 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateIngredientDosageDto } from '../ingredient-dosage/dto/create-ingredient-dosage.dto';
-import { Ingredient_dosage } from '../ingredient-dosage/entities/ingredient-dosage.entity';
 import { IngredientDosageService } from '../ingredient-dosage/ingredient-dosage.service';
 import { CreateDishDto } from './dto/create-dish.dto';
+import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Injectable()
 export class DishRepository {
@@ -39,6 +32,21 @@ export class DishRepository {
         .catch((error) => {
           throw new NotFoundException(`${error}`);
         });
+
+      return prisma.dish.findFirst({
+        where: {
+          id: dish.id,
+        },
+        select: {
+          name: true,
+          description: true,
+          preparation: true,
+          author_id: true,
+          ingredient_dosage: {
+            select: { quantity: true, ingredient: { select: { name: true } } },
+          },
+        },
+      });
     });
   }
 
@@ -74,13 +82,36 @@ export class DishRepository {
       },
     });
   }
+
   async findOne(id: number) {
     return await this.PrismaService.dish.findFirst({
       where: {
         id,
       },
-      include: {
-        ingredient_dosage: true,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        preparation: true,
+        author_id: true,
+        ingredient_dosage: {
+          select: { quantity: true, ingredient: { select: { name: true } } },
+        },
+      },
+    });
+  }
+  async update(data: UpdateDishDto, id: number) {
+    return await this.PrismaService.dish.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+  async remove(id: number) {
+    return await this.PrismaService.dish.delete({
+      where: {
+        id,
       },
     });
   }

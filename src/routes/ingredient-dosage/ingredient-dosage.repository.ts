@@ -9,7 +9,6 @@ export class IngredientDosageRepository {
   constructor(private readonly PrismaService: PrismaService) {}
 
   async createMany(data: Ingredient_dosage[]) {
-    Logger.log(data);
     const teste = await this.PrismaService.ingredient_dosage
       .createMany({
         data,
