@@ -1,15 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { IngredientDosageService } from '../ingredient-dosage/ingredient-dosage.service';
 import { CreateDishDto } from './dto/create-dish.dto';
 import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Injectable()
 export class DishRepository {
-  constructor(
-    private readonly PrismaService: PrismaService,
-    private readonly IngredientDosageService: IngredientDosageService,
-  ) {}
+  constructor(private readonly PrismaService: PrismaService) {}
 
   async create(data: CreateDishDto) {
     return this.PrismaService.$transaction(async (prisma) => {
@@ -25,7 +21,7 @@ export class DishRepository {
       data.ingredients.forEach((ingredient) => {
         ingredient.dish_id = dish.id;
       });
-      const ingredientDosage = await prisma.ingredient_dosage
+      await prisma.ingredient_dosage
         .createMany({
           data: data.ingredients,
         })
@@ -94,6 +90,7 @@ export class DishRepository {
         description: true,
         preparation: true,
         author_id: true,
+        time_to_prepare: true,
         ingredient_dosage: {
           select: { quantity: true, ingredient: { select: { name: true } } },
         },

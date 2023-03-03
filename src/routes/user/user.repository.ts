@@ -22,7 +22,7 @@ export class UserRepository {
   }
 
   async findOneByEmail(email: string) {
-    return this.PrismaService.user.findUniqueOrThrow({
+    return await this.PrismaService.user.findFirst({
       where: {
         email,
       },

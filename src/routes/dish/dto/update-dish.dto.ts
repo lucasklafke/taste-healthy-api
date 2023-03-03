@@ -6,5 +6,4 @@ export class UpdateDishDto {
   description: string;
   time_to_prepare: string;
   preparation: string;
-  author_id: number;
 }
