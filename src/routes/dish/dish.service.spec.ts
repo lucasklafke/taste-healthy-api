@@ -141,37 +141,34 @@ describe('DishService', () => {
           new UnauthorizedException('you are not the author'),
         );
       }
+    });
+    it('should delete a dish', async () => {
+      const result = await dishService.remove(1, 1);
+      expect(result).toEqual(HttpStatus.NO_CONTENT);
+    });
+  });
+  describe('find routes', () => {
+    it('should findOne dish', async () => {
+      const dish = await dishService.findOne(1);
 
-      // it('should delete a dish', async () => {
-      //   const result = await dishService.remove(1, 1);
-
-      //   expect(result).toEqual(HttpStatus.NO_CONTENT);
-      // });
+      expect(dish).toEqual(fakeDishes[0]);
     });
 
-    describe('find routes', () => {
-      it('should findOne dish', async () => {
-        const dish = await dishService.findOne(1);
+    it('should find all dishes without filters', async () => {
+      const dishes = await dishService.findAll({ name: null });
 
-        expect(dish).toEqual(fakeDishes[0]);
-      });
+      expect(dishes).toEqual(fakeDishes);
+    });
 
-      it('should find all dishes without filters', async () => {
-        const dishes = await dishService.findAll({ name: null });
+    it('should find all dishes with filters', async () => {
+      const dishes = await dishService.findAll({ name: 'firstDish' });
 
-        expect(dishes).toEqual(fakeDishes);
-      });
+      expect(dishes).toEqual(fakeDishes);
+    });
 
-      it('should find all dishes with filters', async () => {
-        const dishes = await dishService.findAll({ name: 'firstDish' });
-
-        expect(dishes).toEqual(fakeDishes);
-      });
-
-      it('should find by name', async () => {
-        const dishes = await dishService.findByName('firstDishes');
-        expect(dishes).toEqual(fakeDishes);
-      });
+    it('should find by name', async () => {
+      const dishes = await dishService.findByName('firstDishes');
+      expect(dishes).toEqual(fakeDishes);
     });
   });
 });
