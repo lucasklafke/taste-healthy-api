@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
@@ -13,8 +22,15 @@ export class IngredientController {
   }
 
   @Get()
-  findAll() {
-    return this.ingredientService.findAll();
+  findAll(@Query() filters: string) {
+    if (!filters['skip']) filters['skip'] = 0;
+    if (!filters['take']) filters['take'] = 100;
+    return this.ingredientService.findAll(
+      filters['orderby'],
+      Number(filters['skip']),
+      Number(filters['take']),
+      filters['name'],
+    );
   }
 
   @Get(':id')
@@ -23,7 +39,10 @@ export class IngredientController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateIngredientDto: UpdateIngredientDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateIngredientDto: UpdateIngredientDto,
+  ) {
     return this.ingredientService.update(+id, updateIngredientDto);
   }
 

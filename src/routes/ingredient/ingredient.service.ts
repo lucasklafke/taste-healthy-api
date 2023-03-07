@@ -10,8 +10,31 @@ export class IngredientService {
     return 'This action adds a new ingredient';
   }
 
-  findAll() {
-    return `This action returns all ingredient`;
+  findAll(orderBy: string, skip: number, take: number, name: string) {
+    if (orderBy === 'protein' || orderBy === 'proteins') {
+      return this.IngredientRepository.findManyByProteins(skip, take);
+    }
+
+    if (orderBy === 'carbohydrate' || orderBy === 'carbohydrates') {
+      return this.IngredientRepository.findManyByCarbohydrates(skip, take);
+    }
+
+    if (
+      orderBy === 'fat' ||
+      orderBy === 'total_fat' ||
+      orderBy === 'totalfat' ||
+      orderBy === 'totalFat'
+    ) {
+      return this.IngredientRepository.findManyByTotalFat(skip, take);
+    }
+
+    if (orderBy === 'calories') {
+      return this.IngredientRepository.findManyByCalories(skip, take);
+    }
+    if (name) {
+      return this.IngredientRepository.findByName(name);
+    }
+    return this.IngredientRepository.findAll(skip, take);
   }
 
   findOne(id: number) {

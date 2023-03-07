@@ -1,8 +1,8 @@
 {
   "editor.fontSize": 14,
-  "editor.fontFamily": "Fira Code",
+  // "editor.fontFamily": "Fira Code",
   "editor.fontLigatures": true,
-  "editor.fontWeight": "700",
+  "editor.fontWeight": "500",
   "editor.codeActionsOnSave": {
       "source.fixAll.eslint": true
   },
