@@ -7,7 +7,7 @@ import { IngredientRepository } from './ingredient.repository';
 export class IngredientService {
   constructor(private readonly IngredientRepository: IngredientRepository) {}
   create(createIngredientDto: CreateIngredientDto) {
-    return 'This action adds a new ingredient';
+    return this.IngredientRepository.create(createIngredientDto);
   }
 
   findAll(orderBy: string, skip: number, take: number, name: string) {

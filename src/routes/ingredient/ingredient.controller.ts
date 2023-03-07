@@ -7,18 +7,32 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
-import { CreateIngredientDto } from './dto/create-ingredient.dto';
+import {
+  CreateIngredientDto,
+  ReceivedCreateIngredientDto,
+} from './dto/create-ingredient.dto';
 import { UpdateIngredientDto } from './dto/update-ingredient.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('ingredient')
 export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Post()
-  create(@Body() createIngredientDto: CreateIngredientDto) {
-    return this.ingredientService.create(createIngredientDto);
+  @UseGuards(AuthGuard('jwt'))
+  create(
+    @Body() createIngredientDto: ReceivedCreateIngredientDto,
+    @Req() req: any,
+  ) {
+    const userId: number = req.user.userId;
+    return this.ingredientService.create({
+      ...createIngredientDto,
+      info_author_id: userId,
+    });
   }
 
   @Get()
