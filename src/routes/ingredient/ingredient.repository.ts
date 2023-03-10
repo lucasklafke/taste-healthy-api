@@ -67,4 +67,10 @@ export class IngredientRepository {
       take,
     });
   }
+
+  findManyByGroup(group: string) {
+    return this.PrismaService.ingredient.findMany({
+      where: { group: { group } },
+    });
+  }
 }

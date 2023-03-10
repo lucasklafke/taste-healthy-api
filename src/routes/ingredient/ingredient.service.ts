@@ -37,6 +37,9 @@ export class IngredientService {
     return this.IngredientRepository.findAll(skip, take);
   }
 
+  findManyByGroup(group: string) {
+    return this.IngredientRepository.findManyByGroup(group);
+  }
   findOne(id: number) {
     return `This action returns a #${id} ingredient`;
   }

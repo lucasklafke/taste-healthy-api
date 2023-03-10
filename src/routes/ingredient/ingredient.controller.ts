@@ -47,6 +47,10 @@ export class IngredientController {
     );
   }
 
+  @Get(':group')
+  findManyByGroup(@Param('group') group: string) {
+    return this.ingredientService.findManyByGroup(group);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.ingredientService.findOne(+id);

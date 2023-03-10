@@ -8,4 +8,8 @@ export class FoodGroupService {
   create(data: CreateFoodGroupDto) {
     return this.foodGroupRepository.create(data);
   }
+
+  findAll(filter: any) {
+    return this.foodGroupRepository.findAll();
+  }
 }

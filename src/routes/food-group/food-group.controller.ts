@@ -1,4 +1,12 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import CreateFoodGroupDto from './dto/create-foodGroup.dto';
 import { FoodGroupService } from './food-group.service';
 
@@ -10,5 +18,10 @@ export class FoodGroupController {
   create(@Body() data: CreateFoodGroupDto) {
     Logger.log(data);
     return this.foodGroupService.create(data);
+  }
+
+  @Get()
+  findALl(@Query() filter: any) {
+    return this.foodGroupService.findAll(filter);
   }
 }
