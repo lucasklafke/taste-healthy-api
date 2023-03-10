@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import CreateFoodGroupDto from './dto/create-foodGroup.dto';
 import { FoodGroupService } from './food-group.service';
 
@@ -15,6 +17,7 @@ export class FoodGroupController {
   constructor(private readonly foodGroupService: FoodGroupService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   create(@Body() data: CreateFoodGroupDto) {
     Logger.log(data);
     return this.foodGroupService.create(data);

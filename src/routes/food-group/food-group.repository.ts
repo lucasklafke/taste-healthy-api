@@ -13,4 +13,8 @@ export class foodGroupRepository {
   findAll() {
     return this.PrismaService.food_group.findMany();
   }
+
+  findUniqueByGroup(group: string) {
+    return this.PrismaService.food_group.findUnique({ where: { group } });
+  }
 }
