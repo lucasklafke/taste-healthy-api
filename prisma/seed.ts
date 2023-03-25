@@ -32,7 +32,12 @@ async function main() {
       info_author_id: 1,
     },
   ];
-
+  const usd = await prisma.user.findFirst({
+    where: {
+      email: 'lucas@example.com',
+    },
+  });
+  console.log('Aaaaaaaaa', usd);
   const mainUser = await prisma.user.create({
     data: {
       username: 'lucas',
